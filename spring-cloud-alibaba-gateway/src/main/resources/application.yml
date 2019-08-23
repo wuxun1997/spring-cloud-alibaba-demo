@@ -1,0 +1,32 @@
+#端口
+server:
+  port: 8484
+#应用名
+spring:
+  application:
+    name: lxytrans-gateway
+  #注册中心
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        register-enabled: true
+    # 网关
+    gateway:
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+      routes:
+        - id: lxytrans-consumer
+          uri: lb://lxytrans-consumer
+          predicates:
+            - Path=/wlf/consumer/**
+          filters:
+            - StripPrefix=2
+        - id: lxytrans-provider
+          uri: lb://lxytrans-provider
+          predicates:
+            - Path=/wlf/provider/**
+          filters:
+            - StripPrefix=2
